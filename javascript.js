@@ -1,5 +1,19 @@
-const Gameboard = (function () {
-    let gameboard = [];
-    let player
-  
-    })();
+const gameboard = function () {
+    let boardArray = [];
+
+    const pushBoardArray = function () {
+        
+    }
+
+    return { boardArray }
+}
+
+const playerOne = function () {
+
+
+}
+
+const computer = function () {
+
+
+}
