@@ -1,19 +1,13 @@
-const gameboard = function () {
-    let boardArray = [];
+const gameboard = () => {
+  const boardArray = [];
 
-    const pushBoardArray = function () {
-        
-    }
+  return { boardArray };
+};
 
-    return { boardArray }
-}
+const player = (marker) => {
+  return { marker };
+};
 
-const playerOne = function () {
-
-
-}
-
-const computer = function () {
-
-
-}
+const computer = (marker) => {
+  return { marker };
+};
