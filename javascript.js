@@ -7,14 +7,15 @@ function Gameboard() {
 
   const getBoard = () => boardArray;
 
-  return { getBoard, playerMove };
+  const arrValueLength = () =>
+    getBoard().reduce((acc, cv) => (cv ? acc + 1 : acc), 0);
+
+  return { getBoard, playerMove, arrValueLength };
 }
 
 function GameController(player, computer) {
   const board = Gameboard();
   const randomNumber = [];
-  const randomBoard = board.getBoard();
-  let randomLength = randomBoard.reduce((x, y) => (y ? x + 1 : x), 0);
   const boardResult = board.getBoard();
 
   const players = [
@@ -37,15 +38,27 @@ function GameController(player, computer) {
       document.querySelector('[data-set="' + random + '"]').textContent =
         computer;
       board.playerMove(random, computer);
-      console.log(board.getBoard());
+      console.log(boardResult);
+      board.arrValueLength();
+      getWinner();
     }
   };
 
-  const getWinner = () => {
-    
+  const computerMove = () => {
+    if (board.arrValueLength() != 9) {
+      computerTurn();
+    }
   };
 
-  return { board, players, computerTurn };
+  const h2 = document.querySelector("h2");
+
+  const getWinner = () => {
+    if (board.arrValueLength() === 9) {
+      h2.textContent = "Draw! Try Again.";
+    }
+  };
+
+  return { board, players, computerMove, getWinner };
 }
 
 function ScreenController() {
@@ -54,6 +67,30 @@ function ScreenController() {
   console.log(player1, player2);
 
   let startGame = GameController(player1, player2);
+
+  const playerMove = () => {
+    const boardMove = startGame.board;
+
+    document.querySelectorAll(".boxes").forEach((box) => {
+      box.addEventListener("click", () => {
+        if (box.textContent === "") {
+          const dataSet = box.dataset.set;
+          console.log(dataSet);
+
+          boardMove.playerMove(dataSet, player1);
+          console.log(boardMove.getBoard());
+
+          box.textContent = player1;
+
+          setTimeout(() => {
+            startGame.computerMove();
+          }, "1000");
+
+          startGame.getWinner();
+        }
+      });
+    });
+  };
 
   document.querySelectorAll(".selectors").forEach((selector) => {
     selector.addEventListener("click", () => {
@@ -71,23 +108,12 @@ function ScreenController() {
         startGame = GameController(player1, player2);
       }
 
-      const boardMove = startGame.board;
-
-      document.querySelectorAll(".boxes").forEach((box) => {
-        box.addEventListener("click", () => {
-          const dataSet = box.dataset.set;
-          console.log(dataSet);
-
-          boardMove.playerMove(dataSet, player1);
-          console.log(boardMove.getBoard());
-
-          box.textContent = player1;
-
-          setTimeout(() => {
-            startGame.computerTurn();
-          }, "1000");
-        });
-      });
+      if (player1 === "X") {
+        playerMove();
+      } else {
+        startGame.computerMove();
+        playerMove();
+      }
     });
   });
 
