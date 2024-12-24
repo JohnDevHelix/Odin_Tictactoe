@@ -17,19 +17,44 @@ function GameController(player, computer) {
   const board = Gameboard();
   const randomNumber = [];
   const boardResult = board.getBoard();
+  let h2 = document.querySelector("h2");
 
   const players = [
     {
-      name1: "Player One",
+      name1: "PlayerOne",
       marker1: player,
     },
     {
-      name2: "Player Two",
+      name2: "PlayerTwo",
       marker2: computer,
     },
   ];
 
+  const playerMove = () => {
+
+    document.querySelectorAll(".boxes").forEach((box) => {
+
+      box.addEventListener("click", () => {
+        if (box.textContent === "") {
+          const dataSet = box.dataset.set;
+
+          board.playerMove(dataSet, player);
+
+          box.textContent = player;
+
+          setTimeout(() => {
+            computerMove();
+          }, "1000");
+          
+          getWinner();
+          h2.textContent = "Computer's turn"
+        }
+      });
+    });
+  };
+
   const computerTurn = () => {
+
     let random = Math.floor(Math.random() * 9);
 
     if (boardResult[random] != null) {
@@ -38,9 +63,9 @@ function GameController(player, computer) {
       document.querySelector('[data-set="' + random + '"]').textContent =
         computer;
       board.playerMove(random, computer);
-      console.log(boardResult);
       board.arrValueLength();
       getWinner();
+      h2.textContent = "Your move?"
     }
   };
 
@@ -50,70 +75,47 @@ function GameController(player, computer) {
     }
   };
 
-  const h2 = document.querySelector("h2");
-
   const getWinner = () => {
-    if (board.arrValueLength() === 9) {
-      h2.textContent = "Draw! Try Again.";
-    }
+
   };
 
-  return { board, players, computerMove, getWinner };
+  return { board, players, computerMove, playerMove, getWinner };
 }
 
 function ScreenController() {
-  let player1 = "X";
-  let player2 = "O";
-  console.log(player1, player2);
+  let player1 = "";
+  let player2 = "";
 
   let startGame = GameController(player1, player2);
-
-  const playerMove = () => {
-    const boardMove = startGame.board;
-
-    document.querySelectorAll(".boxes").forEach((box) => {
-      box.addEventListener("click", () => {
-        if (box.textContent === "") {
-          const dataSet = box.dataset.set;
-          console.log(dataSet);
-
-          boardMove.playerMove(dataSet, player1);
-          console.log(boardMove.getBoard());
-
-          box.textContent = player1;
-
-          setTimeout(() => {
-            startGame.computerMove();
-          }, "1000");
-
-          startGame.getWinner();
-        }
-      });
-    });
-  };
+  let h2 = document.querySelector("h2");
 
   document.querySelectorAll(".selectors").forEach((selector) => {
     selector.addEventListener("click", () => {
       if (selector.textContent === "O") {
         player1 = "O";
         player2 = "X";
-        console.log(player1, player2);
 
         startGame = GameController(player1, player2);
       } else if (selector.textContent === "X") {
         player1 = "X";
         player2 = "O";
-        console.log(player1, player2);
 
         startGame = GameController(player1, player2);
       }
 
+      const h2 = document.querySelector("h2");
+
       if (player1 === "X") {
-        playerMove();
+        startGame.playerMove();
+        h2.textContent = "Make your first move!";
       } else {
-        startGame.computerMove();
-        playerMove();
+        h2.textContent = "Computer's first move!";
+        setTimeout(() => {
+          startGame.computerMove();
+        }, "1000");
+        startGame.playerMove();
       }
+      
     });
   });
 
