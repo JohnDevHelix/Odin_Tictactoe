@@ -18,17 +18,7 @@ function GameController(player, computer) {
   const randomNumber = [];
   const boardResult = board.getBoard();
   let h2 = document.querySelector("h2");
-
-  const players = [
-    {
-      name1: "PlayerOne",
-      marker1: player,
-    },
-    {
-      name2: "PlayerTwo",
-      marker2: computer,
-    },
-  ];
+  console.log(player, computer);
 
   const playerMove = () => {
 
@@ -42,12 +32,17 @@ function GameController(player, computer) {
 
           box.textContent = player;
 
-          setTimeout(() => {
-            computerMove();
-          }, "1000");
-          
-          getWinner();
           h2.textContent = "Computer's turn"
+          console.log(boardResult);
+
+          if (getWinner()) {
+            return;
+          } else {
+            setTimeout(() => {
+              computerMove();
+            }, "1000");
+            getWinner();
+          }
         }
       });
     });
@@ -64,8 +59,13 @@ function GameController(player, computer) {
         computer;
       board.playerMove(random, computer);
       board.arrValueLength();
-      getWinner();
       h2.textContent = "Your move?"
+      console.log(boardResult);
+      if (getWinner()) {
+        return;
+      } else {
+        getWinner();
+      }
     }
   };
 
@@ -76,10 +76,27 @@ function GameController(player, computer) {
   };
 
   const getWinner = () => {
-
+    if (board.arrValueLength() === 9) {
+      h2.textContent = "Draw!"
+    } else {
+      if (boardResult[0] === player && boardResult[1] === player && boardResult[2] === player ||
+          boardResult[3] === player && boardResult[4] === player && boardResult[5] === player ||
+          boardResult[6] === player && boardResult[7] === player && boardResult[8] === player ||
+          boardResult[0] === player && boardResult[3] === player && boardResult[6] === player ||
+          boardResult[1] === player && boardResult[4] === player && boardResult[7] === player ||
+          boardResult[2] === player && boardResult[5] === player && boardResult[8] === player ||
+          boardResult[0] === player && boardResult[4] === player && boardResult[8] === player ||
+          boardResult[2] === player && boardResult[4] === player && boardResult[6] === player
+      ) {
+        h2.textContent = "You Win!! Congrats";
+        return true;
+      }
+    }
   };
 
-  return { board, players, computerMove, playerMove, getWinner };
+  
+
+  return { board, computerMove, playerMove, getWinner };
 }
 
 function ScreenController() {
