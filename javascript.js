@@ -136,8 +136,18 @@ function GameController(player, computer) {
     }
   };
 
+  const buttons = document.createElement("button");
+  buttons.classList.add("buttons")
+
   function newGame() {
     resetButton.remove();
+    boardResult.length = 0;
+    console.log(boardResult);
+    document.querySelectorAll(".boxes").forEach((box) => {
+      box.textContent = "";
+      box.appendChild(buttons.cloneNode(true));
+    })
+    h2.textContent = "Select your marker";
     ScreenController();
   }
 
