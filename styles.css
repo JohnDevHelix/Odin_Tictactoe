@@ -2,39 +2,66 @@ body {
   font-family: "Parkinsans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+  background-color: grey;
+  color: white;
 }
 
 .selector {
   display: flex;
   flex-direction: column;
-  border: black 2px solid;
   align-items: center;
 }
 
 .selector-box {
   display: flex;
-  border: black 2px solid;
   justify-content: center;
+  align-items: center;
+  padding: 30px;
+  height: 150px;
+  width: 100%;
+  border: 1px solid black;
+}
+
+.buttonSelector {
+  font-size: 3rem;
+  height: 75px;
+  width: 75px;
 }
 
 .selectors {
-  border: black 1px solid;
-  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 200px;
+  font-size: 1rem;
+  font-weight: bolder;
+  border: 1px solid black;
 }
 
 .main-box {
-  border: black 2px solid;
   display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
+  grid-template-columns: repeat(3, 120px);
+  grid-template-rows: repeat(3, 120px);
   justify-content: center;
 }
 
 .boxes {
-  border: black 1px solid;
+  border: black 3px solid;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: bolder;
+}
+
+button {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+}
+
+.resetButton {
+  height: 100px;
+  width: 200px;
 }
