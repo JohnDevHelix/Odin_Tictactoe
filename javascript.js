@@ -26,15 +26,13 @@ function GameController(player, computer) {
     selectorBox.appendChild(resetButton);
   };
 
-  const disableButtons = () => {
-    document.querySelectorAll(".buttons").forEach((button) => {
-      button.disabled = true;
-    });
-  };
-
-  const enableButtons = () => {
-    document.querySelectorAll(".buttons").forEach((button) => {
-      button.disabled = false;
+  const toggleButtons = (state) => {
+    document.querySelectorAll(".boxes").forEach((box) => {
+      if (state) {
+        box.style.pointerEvents = "auto";
+      } else {
+        box.style.pointerEvents = "none";
+      }
     });
   };
 
@@ -50,14 +48,14 @@ function GameController(player, computer) {
 
           h2.textContent = "Computer's turn";
           console.log(boardResult);
-          disableButtons();
+          toggleButtons(false);
 
           if (getWinner(boardResult, player)) {
             return;
           } else {
             setTimeout(() => {
               computerMove();
-              enableButtons();
+              toggleButtons(true);
             }, "1000");
             getWinner(boardResult, computer);
           }
@@ -115,14 +113,14 @@ function GameController(player, computer) {
         if (marker === player) {
           h2.textContent = "You Win!";
 
-          disableButtons();
+          toggleButtons(false);
           resetGame();
 
           return true;
         } else {
           h2.textContent = "You Lose!";
 
-          disableButtons();
+          toggleButtons(false);
           resetGame();
           return true;
         }
@@ -137,16 +135,17 @@ function GameController(player, computer) {
   };
 
   const buttons = document.createElement("button");
-  buttons.classList.add("buttons")
+  buttons.classList.add("buttons");
 
   function newGame() {
     resetButton.remove();
     boardResult.length = 0;
     console.log(boardResult);
     document.querySelectorAll(".boxes").forEach((box) => {
-      box.textContent = "";
-      box.appendChild(buttons.cloneNode(true));
-    })
+      const newBox = box.cloneNode(true);
+      newBox.textContent = "";
+      box.parentNode.replaceChild(newBox, box);
+    });
     h2.textContent = "Select your marker";
     ScreenController();
   }
@@ -158,8 +157,7 @@ function GameController(player, computer) {
     computerMove,
     playerMove,
     getWinner,
-    disableButtons,
-    enableButtons,
+    toggleButtons,
   };
 }
 
@@ -202,13 +200,13 @@ function ScreenController() {
 
         startGame = GameController(player1, player2);
 
-        startGame.disableButtons();
+        startGame.toggleButtons(false);
 
         h2.textContent = "Computer's first move!";
 
         setTimeout(() => {
           startGame.computerMove();
-          startGame.enableButtons();
+          startGame.toggleButtons(true);
         }, "1000");
 
         startGame.playerMove();
@@ -222,6 +220,7 @@ function ScreenController() {
         startGame = GameController(player1, player2);
         startGame.playerMove();
         h2.textContent = "Make your first move!";
+        startGame.toggleButtons(true);
       }
     });
   });
