@@ -17,6 +17,8 @@ function GameController(player, computer) {
   const board = Gameboard();
   const boardResult = board.getBoard();
   let h2 = document.querySelector("h2");
+
+  // new game button
   const resetButton = document.createElement("button");
   resetButton.textContent = "New Game?";
   resetButton.classList.add("resetButton");
@@ -26,28 +28,21 @@ function GameController(player, computer) {
     selectorBox.appendChild(resetButton);
   };
 
+  // toggle div click
   const toggleButtons = (state) => {
     document.querySelectorAll(".boxes").forEach((box) => {
-      if (state) {
-        box.style.pointerEvents = "auto";
-      } else {
-        box.style.pointerEvents = "none";
-      }
+      box.style.pointerEvents = state ? "auto" : "none";
     });
   };
 
   const playerMove = () => {
     document.querySelectorAll(".boxes").forEach((box) => {
-      box.addEventListener("click", () => {
+      box.addEventListener("click", (event) => {
         if (box.textContent === "") {
           const dataSet = box.dataset.set;
-
           board.playerMove(dataSet, player);
-
           box.textContent = player;
-
           h2.textContent = "Computer's turn";
-          console.log(boardResult);
           toggleButtons(false);
 
           if (getWinner(boardResult, player)) {
@@ -75,11 +70,9 @@ function GameController(player, computer) {
       board.playerMove(random, computer);
       board.arrValueLength();
       h2.textContent = "Your move?";
-      console.log(boardResult);
+
       if (getWinner(boardResult, computer)) {
         return;
-      } else {
-        getWinner(boardResult, computer);
       }
     }
   };
@@ -110,37 +103,29 @@ function GameController(player, computer) {
         boardResult[b] === marker &&
         boardResult[c] === marker
       ) {
-        if (marker === player) {
-          h2.textContent = "You Win!";
+        toggleButtons(false);
+        h2.textContent = marker === player ? "You Win!" : "You Lose!";
+        resetGame();
 
-          toggleButtons(false);
-          resetGame();
-
-          return true;
-        } else {
-          h2.textContent = "You Lose!";
-
-          toggleButtons(false);
-          resetGame();
-          return true;
-        }
+        return true;
       }
     }
     if (board.arrValueLength() === 9) {
       h2.textContent = "Draw!";
+      resetGame();
       return true;
     } else {
       return false;
     }
   };
 
+  // remove old instance and event listeners
   const buttons = document.createElement("button");
   buttons.classList.add("buttons");
 
   function newGame() {
     resetButton.remove();
     boardResult.length = 0;
-    console.log(boardResult);
     document.querySelectorAll(".boxes").forEach((box) => {
       const newBox = box.cloneNode(true);
       newBox.textContent = "";
@@ -153,15 +138,14 @@ function GameController(player, computer) {
   resetButton.addEventListener("click", newGame);
 
   return {
-    board,
     computerMove,
     playerMove,
-    getWinner,
     toggleButtons,
   };
 }
 
 function ScreenController() {
+  // create selectors
   const divButton = document.createElement("div");
   divButton.classList.add("selectors");
   divButton.id = "X";
